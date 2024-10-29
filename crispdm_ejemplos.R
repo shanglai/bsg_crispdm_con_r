@@ -21,6 +21,8 @@ library(summarytools)
 library(factoextra)
 
 
+######## Caso 1
+
 
 # 1. Entendimiento Negocio
 # https://www.kaggle.com/datasets/uciml/pima-indians-diabetes-database
@@ -31,9 +33,32 @@ data("Pima.tr") # Parte del paquete MASS
 # 2. Exploración de los datos
 str(Pima.tr)
 summary(Pima.tr)
+
+hist(runif(300,0,1))
+hist(rnorm(300,0,1))
+
+x <- sort(sample(runif(300,0,1),20,replace=T))
+sort(
+  sample(
+    runif(300,0,1),20,replace=T
+    )
+  )
+
+runif(300,0,1) %>% sample(size=20,replace=T) %>% sort()
+
+summary(x)
+mean(x)
+sum(x) / length(x)
+
+head(Pima.tr)
 skim(Pima.tr)
-pima2 <- Pima.tr %>% mutate(type=ifelse(type=='Yes',1,0)) %>% data.frame()
+dim(Pima.tr)
+pima2 <- Pima.tr %>% mutate(type=ifelse(type=='Yes',1,0)) %>% mutate(type=factor(type)) %>% data.frame()
 summary(pima2)
+
+Pima.tr %>% ggplot() + geom_boxplot(aes(x=type,y=npreg))
+Pima.tr %>% ggplot() + geom_histogram(aes(x = npreg,fill= type,group=type)) + facet_grid(type ~ .)
+
 GGally::ggpairs(Pima.tr)
 GGally::ggpairs(Pima.tr,mapping=aes(color=type))
 dfSummary(Pima.tr) %>% stview()
@@ -45,9 +70,15 @@ dfSummary(Pima.tr) %>% stview()
 # ???Validación?
 
 set.seed(123)
+runif(3,0,1)
+
+
 trainIndex <- createDataPartition(Pima.tr$type, p = 0.7, list = FALSE)
 trainData <- Pima.tr[trainIndex,]
 testData <- Pima.tr[-trainIndex,]
+dim(Pima.tr)
+dim(trainData)
+dim(testData)
 
 # Verificar la distribución
 table(trainData$type)
@@ -70,25 +101,40 @@ confusionMatrix(predictions, testData$type)
 
 
 
+######## Caso 2
+# Iris Dataset
 
+#1
+# http://www.lac.inpe.br/~rafael.santos/Docs/CAP394/WholeStory-Iris.html#:~:text=The%20Iris%20Dataset%20contains%20four,model%20to%20classify%20the%20species.
 
-
+#2
 # Cargar dataset iris
 data("iris")
 
 # Exploración de los datos
 str(iris)
 summary(iris)
+GGally::ggpairs(iris)
 # Escalar los datos
+#3
 iris_scaled <- scale(iris[, -5])
 # Aplicar K-means con 3 clusters (sabemos que hay 3 especies)
 set.seed(123)
-kmeans_model <- kmeans(iris_scaled, centers = 3)
-
+kmeans_model <- kmeans(iris_scaled, centers = 7)
+#4
 # Revisar los resultados
 kmeans_model$cluster
 table(kmeans_model$cluster, iris$Species)
 
+library(factoextra)
+
+#5
 # Visualizar los clusters
 fviz_cluster(kmeans_model, data = iris_scaled, geom = "point")
 
+fviz_pca_ind(pca.1, geom.ind = "point", 
+             col.ind = "#FC4E07", 
+             axes = c(1, 2), 
+             pointsize = 1.5) 
+
+#6
