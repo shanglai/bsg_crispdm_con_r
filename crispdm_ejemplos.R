@@ -102,6 +102,7 @@ confusionMatrix(predictions, testData$type)
 
 
 ######## Caso 2
+##### Coloca en los números las fases del método CRISP-DM al que pertenece.
 # Iris Dataset
 
 #1
